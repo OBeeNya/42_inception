@@ -12,4 +12,8 @@ clean:	make stop
 	cd srcs && ${DOCKER_COMPOSE} down --volumes
 	sudo rm -rf ~/data
 
+fclean:
+	cd srcs && docker-compose down -v && cd ..
+	sudo sudo rm -rf ~/data
+
 .PHONY:	all
