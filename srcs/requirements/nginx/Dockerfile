@@ -1,22 +1,11 @@
 FROM debian:buster
 
-# Nginx
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt install nginx -y
+RUN apt -y update \
+    && apt -y install nginx \
+    && apt -y install openssl
 
-# OpenSSL
-RUN apt install openssl -y
-RUN mkdir -p /etc/nginx/ssl
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=IDF/L=Paris/0=42/OU=42/CN=baubigna/CN=baubigna.42.fr/UID=baubigna"
+RUN mkdir -p /etc/nginx/ssl/private
+RUN chmod 755 /etc/nginx/ssl/private
+RUN openssl req -nodes -x509 -out /etc/nginx/ssl/key.pem -keyout /etc/nginx/ssl/private/pkey.prem -subj "/C=FR/ST=Ile-De-France/L=Paris/O=42/OU=42/CN=42.fr/UID=baubigna"
 
-# Config
-RUN mkdir -p /var/run/nginx
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-
-# Getting access rights to server root
-RUN chmod 755 /var/www/html
-RUN chown -R www-data:www-data /var/www/html
-
-# Don't run the program in the background
-CMD ["nginx", "-g", "daemon off;"]
+COPY srcs/server.conf /etc/nginx/nginx.conf

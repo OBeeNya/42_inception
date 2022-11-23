@@ -1,64 +1,93 @@
-version: "3"
+version:  '3.7'
 
 services:
   mariadb:
     container_name: mariadb
-    networks:
-      - inception
+    hostname: mariadb
     build:
-      context: requirements/mariadb/
+      context: ./requirements/mariadb
       dockerfile: Dockerfile
-    env_file: .env
-    volumes:
-      - mariadb:/var/lib/mysql
-    restart: unless-stopped
     expose:
-      - "3306"
-  nginx:
-    container_name: nginx
-    volumes:
-      - wordpress:/var/www/wordpress
+      - "${MARIADB_PORT}"
+    restart: unless-stopped
     networks:
-      - inception
-    depends_on:
-      - wordpress
-    build:
-      context: requirements/nginx/
-      dockerfile: Dockerfile
-    env_file: .env
-    ports:
-      - "443:443"
-    restart: on-failure
+      - back
+    volumes:
+      - "mariadb_volume:${DB_PATH}"
+    environment:
+      - DB_PATH = ${DB_PATH}
+      - DATABASE_NAME = ${DATABASE_NAME}
+      - ADMIN_USERNAME = ${ADMIN_USERNAME}
+      - ADMIN_PASSWORD = ${ADMIN_PASSWORD}
+      - USERNAME = ${USERNAME}
+      - PASSWORD = ${PASSWORD}
+    command: ["/usr/bin/mysqld_safe"]
   wordpress:
     container_name: wordpress
-    env_file: .env
-    volumes:
-      - wordpress:/var/www/wordpress
-    networks:
-      - inception
+    hostname: wordpress
     build:
-      context: requirements/wordpress/
+      context: ./requirements/wordpress
       dockerfile: Dockerfile
+    ports:
+      - "${WP_PORT}:${WP_PORT}"
     depends_on:
-      - mariadb
-    restart: on-failure
-    expose:
-      - "9000"
+      - "mariadb"
+    restart: unless-stopped
+    volumes:
+      - "wordpress_volume:${WP_PATH}"
+    networks:
+      - front
+      - back
+    environment:
+      - WP_PATH = ${WP_PATH}
+      - WP_TITLE = ${WP_TITLE}
+      - CONF_FILE_PATH = ${CONF_FILE_PATH}
+      - DOMAIN_NAME = ${DOMAIN_NAME}
+      - WP_LOCAL_PATH = ${WP_LOCAL_PATH}
+      - ADMIN_MAIL = ${ADMIN_MAIL}
+      - DB_HOST = ${DB_HOST}
+      - EMAIL = ${EMAIL}
+      - DATABASE_NAME = ${DATABASE_NAME}
+      - ADMIN_USERNAME = ${ADMIN_USERNAME}
+      - ADMIN_PASSWORD = ${ADMIN_PASSWORD}
+      - USERNAME = ${USERNAME}
+      - PASSWORD = ${PASSWORD}
+    command: ["php-fpm7.3", "-F"]
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    depends_on:
+      - "wordpress"
+    restart: unless-stopped
+    volumes:
+      - "wordpress_volume:${WP_PATH}"
+    networks:
+      - front
+    environment:
+      - NGINX_PORT = ${NGINX_PORT}
+    command: ["nginx", "-g", "daemon off;"]
 
 volumes:
-  wordpress:
-    driver: local
+  wordpress_volume:
+    driver: "local"
     driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/home/baubigna/data/wordpress'
-  mariadb:
-    driver: local
+      o: bind
+      type: "none"
+      device: ${VOLUME_PATH}/wordpress
+  mariadb_volume:
+    driver: "local"
     driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/home/baubigna/data/mariadb'
+      o: bind
+      type: "none"
+      device: ${VOLUME_PATH}/mariadb
 
 networks:
-  inception:
+  front:
+    driver: bridge
+  back:
     driver: bridge
