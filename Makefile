@@ -8,9 +8,9 @@ all:	up
 re:		restart
 up:		up-back
 up-front:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up -b
+		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build
 up-back:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up -bd
+		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 stop:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} stop
 clean:
@@ -21,10 +21,10 @@ dclean:
 		@${BASH} ${CLEAR_FILE} || true
 restart:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} stop || true
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up -bd
+		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 drestart:
 		@${BASH} ${CLEAR_FILE} || true
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up -bd
+		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 create_volume:
 		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb ${VOLUME_PATH}/nginx || true
 destroy_volume:
@@ -32,5 +32,5 @@ destroy_volume:
 status:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} ps
 logs:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} logs -t=100
+		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} logs
 .PHONY:	all re up up-front up-back stop clean dclean restart drestart create_volume destroy_volume status logs
