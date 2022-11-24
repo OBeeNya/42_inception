@@ -15,12 +15,12 @@ services:
     volumes:
       - "mariadb_volume:${DB_PATH}"
     environment:
-      - DB_PATH = ${DB_PATH}
-      - DATABASE_NAME = ${DATABASE_NAME}
-      - ADMIN_USERNAME = ${ADMIN_USERNAME}
-      - ADMIN_PASSWORD = ${ADMIN_PASSWORD}
-      - USERNAME = ${USERNAME}
-      - PASSWORD = ${PASSWORD}
+      - DB_PATH=${DB_PATH}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
     command: ["/usr/bin/mysqld_safe"]
   wordpress:
     container_name: wordpress
@@ -39,19 +39,19 @@ services:
       - front
       - back
     environment:
-      - WP_PATH = ${WP_PATH}
-      - WP_TITLE = ${WP_TITLE}
-      - CONF_FILE_PATH = ${CONF_FILE_PATH}
-      - DOMAIN_NAME = ${DOMAIN_NAME}
-      - WP_LOCAL_PATH = ${WP_LOCAL_PATH}
-      - ADMIN_MAIL = ${ADMIN_MAIL}
-      - DB_HOST = ${DB_HOST}
-      - EMAIL = ${EMAIL}
-      - DATABASE_NAME = ${DATABASE_NAME}
-      - ADMIN_USERNAME = ${ADMIN_USERNAME}
-      - ADMIN_PASSWORD = ${ADMIN_PASSWORD}
-      - USERNAME = ${USERNAME}
-      - PASSWORD = ${PASSWORD}
+      - WP_PATH=${WP_PATH}
+      - WP_TITLE=${WP_TITLE}
+      - CONF_FILE_PATH=${CONF_FILE_PATH}
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - WP_LOCAL_PATH=${WP_LOCAL_PATH}
+      - ADMIN_MAIL=${ADMIN_MAIL}
+      - DB_HOST=${DB_HOST}
+      - EMAIL=${EMAIL}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
     command: ["php-fpm7.3", "-F"]
   nginx:
     container_name: nginx
@@ -69,7 +69,7 @@ services:
     networks:
       - front
     environment:
-      - NGINX_PORT = ${NGINX_PORT}
+      - NGINX_PORT=${NGINX_PORT}
     command: ["nginx", "-g", "daemon off;"]
 
 volumes:
