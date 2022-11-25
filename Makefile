@@ -26,11 +26,7 @@ drestart:
 		@${BASH} ${CLEAR_FILE} || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 create_volume:
-		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb ${VOLUME_PATH}/nginx || true
+		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb || true
 destroy_volume:
-		@sudo rm -rf ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb ${VOLUME_PATH}/nginx || true
-status:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} ps
-logs:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} logs
-.PHONY:	all re up up-front up-back stop clean dclean restart drestart create_volume destroy_volume status logs
+		@sudo rm -rf ${VOLUME_PATH} || true
+.PHONY:	all re up up-front up-back stop clean dclean restart drestart create_volume destroy_volume
