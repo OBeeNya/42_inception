@@ -10,6 +10,7 @@ up:		up-back
 up-front:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build
 up-back:
+		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 stop:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} stop
@@ -19,14 +20,12 @@ clean:
 dclean:
 		@make stop
 		@${BASH} ${CLEAR_FILE} || true
+		@sudo rm -rf ${VOLUME_PATH} || true
 restart:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} stop || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
 drestart:
 		@${BASH} ${CLEAR_FILE} || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
-create_volume:
-		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb || true
-destroy_volume:
-		@sudo rm -rf ${VOLUME_PATH} || true
 .PHONY:	all re up up-front up-back stop clean dclean restart drestart create_volume destroy_volume
+
