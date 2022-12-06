@@ -7,8 +7,6 @@ VOLUME_PATH = /home/baubigna/data
 all:	up
 re:		restart
 up:		up-back
-up-front:
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build
 up-back:
 		@sudo mkdir -p ${VOLUME_PATH}/wordpress ${VOLUME_PATH}/mariadb || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
@@ -24,8 +22,4 @@ dclean:
 restart:
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} stop || true
 		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
-drestart:
-		@${BASH} ${CLEAR_FILE} || true
-		@${DOCKER_COMPOSE} -f ${DOCKER_COMPOSE_FILE} up --build -d
-.PHONY:	all re up up-front up-back stop clean dclean restart drestart create_volume destroy_volume
-
+.PHONY:	all re up up-back stop clean dclean restart
