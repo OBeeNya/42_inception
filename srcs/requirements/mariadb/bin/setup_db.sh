@@ -14,6 +14,7 @@ mysql -uroot -e "FLUSH PRIVILEGES;"
 mysql -uroot -e "CREATE USER '${USERNAME}'@'%' IDENTIFIED BY '${PASSWORD}'"
 mysql -uroot -e "GRANT ALL PRIVILEGES ON ${DATABASE_NAME}.* TO '${USERNAME}'@'%' WITH GRANT OPTION"
 mysql -uroot -e "FLUSH PRIVILEGES;"
+mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ADMIN_PASSWORD}';"
 
 mysqladmin -uroot shutdown
 
